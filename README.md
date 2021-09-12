@@ -50,3 +50,4 @@ Computer science course @ Applied Mathematics/SPBPU 2021-2022
 |   +-- src
 |   |   +-- main.c
 ```
+
