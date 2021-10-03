@@ -21,7 +21,6 @@ extern "C" {
     int weatherBelowZero(list* head);
     int averageTemperatureSearch(list* head, int temp);
     void deleteList(list* head);
-    list* deleteFirstElement(list* head);
 
 #ifdef __cplusplus
 }
