@@ -41,7 +41,7 @@ int dateComparison(char* first, char* second) {
         printf("sscanf error");
         exit(1);
     }
-    k = sscanf(second, "%i-%2i-%i", &secondDate[0], &secondDate[1], &secondDate[2]);
+    k = sscanf(second, "%i-%i-%i", &secondDate[0], &secondDate[1], &secondDate[2]);
     if (k != 3) {
         printf("sscanf error");
         exit(1);
@@ -145,16 +145,6 @@ int averageTemperatureSearch(list* head, int temp) {
     return i;
 }
 
-int printList(list* head) {
-    int i = 0;
-    while (head != NULL) {
-        printf("%s %i\n", head->date, head->temp);
-        head = head->ptr;
-        i++;
-    }
-    return i;
-}
-
 void deleteList(list* head) {
     list* p = NULL;
     while (head) {
@@ -163,11 +153,4 @@ void deleteList(list* head) {
         free(p);
     }
     free(head);
-}
-
-list* deleteFirstElement(list* head) {
-    list* tmp = head;
-    head = head->ptr;
-    free(tmp);
-    return head;
 }
