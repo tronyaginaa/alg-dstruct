@@ -3,9 +3,9 @@
 #define  _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
 
-TEST(dateComparison, Test1) {
-	char date_1[] = "2020-11-6";
-	char date_2[] = "2020-11-15";
+TEST(dateComparison, comparisonEarlyWLaterDate) {
+	char date_1[] = "2020-11-3";
+	char date_2[] = "2020-11-16";
 	EXPECT_EQ(1, dateComparison(date_1,date_2));
 }
 
@@ -52,7 +52,7 @@ TEST(push, sortByDate) {
 }
 
 
-TEST(weatherBelowZero, findDaysWWeatherBelowZero) {
+TEST(weatherBelowZero, findElementsWWeatherBelowZero) {
 	list list_1, list_2, list_3;
 	list_1 = { "2003-1-4", -15 };
 	list_2 = { "2004-5-6", -10 };
@@ -62,7 +62,7 @@ TEST(weatherBelowZero, findDaysWWeatherBelowZero) {
 	EXPECT_EQ(weatherBelowZero(&list_1), 2);
 }
 
-TEST(weatherBelowZero, notDaysWWeatherBelowZero) {
+TEST(weatherBelowZero, noElementsWWeatherBelowZero) {
 	list list_1, list_2, list_3;
 	list_1 = { "2003-1-4", 10 };
 	list_2 = { "2004-5-6", 15 };
@@ -87,21 +87,21 @@ TEST(readFile, emptyFile) {
 TEST(readFile, normalFileFor3Elements) {
 	char file[] = "C:\\Users\\trony\\Desktop\\LAB1_Tronyagina_A26\\test.txt";
 	list* head = readFile(file);
-	EXPECT_FALSE(head == NULL);
+	ASSERT_FALSE(head == NULL);
 	EXPECT_EQ(head->temp, -10);
 	EXPECT_STREQ(head->date, "2020-12-1");
 	head = head->ptr;
-	EXPECT_FALSE(head == NULL);
+	ASSERT_FALSE(head == NULL);
 	EXPECT_EQ(head->temp, 0);
 	EXPECT_STREQ(head->date, "2020-3-4");
 	head = head->ptr;
-	EXPECT_FALSE(head == NULL);
+	ASSERT_FALSE(head == NULL);
 	EXPECT_EQ(head->temp,25);
 	EXPECT_STREQ(head->date, "2020-6-1");
 	deleteList(head);
 }
 
-TEST(averageTemperatureSearch, TestName9) {
+TEST(averageTemperatureSearch, findTwoElementsWAverageTemperature) {
 	list list_1, list_2, list_3;
 	list_1 = { "2003-1-4", 0 };
 	list_2 = { "2004-5-6", 0 };
@@ -111,7 +111,7 @@ TEST(averageTemperatureSearch, TestName9) {
 	EXPECT_EQ(averageTemperatureSearch(&list_1, 0), 2);
 }
 
-TEST(averageTemperatureSearch, TestName8) {
+TEST(averageTemperatureSearch, noElementsWAverageTemperature) {
 	list list_1, list_2, list_3;
 	list_1 = { "2003-1-4", -15};
 	list_2 = { "2004-5-6", -10};
