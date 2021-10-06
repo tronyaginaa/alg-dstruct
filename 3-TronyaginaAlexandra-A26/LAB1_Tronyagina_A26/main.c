@@ -7,6 +7,7 @@
 #pragma warning (disable:4996)
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define N 12
 
@@ -19,13 +20,11 @@ typedef struct list {
 list* listInitialization(char* date, int temp) {
     int i;
     list* head = (list*)malloc(sizeof(list));
-    if (head == NULL) {
-        printf("Memory initalization error");
-        exit(1);
-    }
-    for (i = 0; i < N; i++) {
-        head->date[i] = date[i];
-    }
+        if (head == NULL) {
+            printf("Memory initalization error");
+            return NULL;
+        }
+    strcpy(head->date, date);
     head->temp = temp;
     head->ptr = NULL;
     return head;
@@ -36,59 +35,50 @@ int dateComparison(char* first, char* second) {
     int secondDate[3];
     int i = 0;
     int k;
-    k = sscanf(first, "%i-%i-%i", &firstDate[0], &firstDate[1], &firstDate[2]);
-    if (k != 3) {
-        printf("sscanf error");
-        exit(1);
-    }
-    k = sscanf(second, "%i-%i-%i", &secondDate[0], &secondDate[1], &secondDate[2]);
-    if (k != 3) {
-        printf("sscanf error");
-        exit(1);
-    }
-    for (i = 0; i < 3; i++) {
-        if (firstDate[i] < secondDate[i]) {
-            return 1;
+    sscanf(first, "%i-%i-%i", &firstDate[0], &firstDate[1], &firstDate[2]);
+    sscanf(second, "%i-%i-%i", &secondDate[0], &secondDate[1], &secondDate[2]);
+         for (i = 0; i < 3; i++) {
+            if (firstDate[i] < secondDate[i]) {
+                return 1;
+            }
+            else if (firstDate[i] > secondDate[i]) {
+                return 0;
+            }
         }
-        else if (firstDate[i] > secondDate[i]) {
-            return 0;
-        }
-    }
     return 0;
 }
+
 list* push(list* head, char* date, int temp) {
-    if (head == NULL) {
-        return head = listInitialization(date, temp);
-    }
+        if (head == NULL) {
+            return head = listInitialization(date, temp);
+        }
     list* tmp = (list*)malloc(sizeof(list));
-    if (tmp == NULL) {
-        printf("Memory initalization error");
-        exit(1);
-    }
-    int i;
-    for (i = 0; i < N; i++) {
-        tmp->date[i] = date[i];
-    }
+        if (tmp == NULL) {
+            printf("Memory initalization error");
+            return NULL;
+        }
+    strcpy(tmp->date, date);
     tmp->temp = temp;
-    if (tmp->temp < head->temp) {
-        tmp->ptr = head;
-        head = tmp;
-        return head;
-    }
-    if (tmp->temp == head->temp) {
-        if (dateComparison(tmp->date, head->date)) {
+        if (tmp->temp < head->temp) {
             tmp->ptr = head;
             head = tmp;
             return head;
         }
-    }
+        if (tmp->temp == head->temp) {
+            if (dateComparison(tmp->date, head->date)) {
+                tmp->ptr = head;
+                head = tmp;
+                return head;
+            }
+        }
+ 
     list* p = head;
-    while (p->ptr != NULL && p->ptr->temp < tmp->temp) {
-        p = p->ptr;
-    }
-    while (p->ptr != NULL && tmp->temp == p->ptr->temp && dateComparison(p->ptr->date, tmp->date)) {
-        p = p->ptr;
-    }
+        while (p->ptr != NULL && p->ptr->temp < temp) {
+            p = p->ptr;
+        }
+        while (p->ptr != NULL && temp == p->ptr->temp && dateComparison(p->ptr->date, date)) {
+            p = p->ptr;
+        }
     tmp->ptr = p->ptr;
     p->ptr = tmp;
     return head;
@@ -97,39 +87,34 @@ list* push(list* head, char* date, int temp) {
 list* readFile(char const* fileName) {
     FILE* file;
     file = fopen(fileName, "r");
-    if (file == NULL) {
-        printf("The file was not open.\n");
-        return NULL;
-    }
-    char* date = malloc(sizeof(char) * 12);
-    if (date == NULL) {
-        printf("Memory initalization error");
-        exit(1);
-    }
+        if (file == NULL) {
+            printf("The file was not open.\n");
+            return NULL;
+        }
+    char date[N];
     int temp;
     int k;
     list* head = NULL;
-    while (k = fscanf(file, "%s %i", date, &temp) != EOF) {
-        if (k < 1) {
-            printf("fscanf error");
-            return NULL;
+        while (k = fscanf(file, "%s %i", date, &temp) != EOF) {
+            if (k < 1) {
+                printf("fscanf error");
+                return NULL;
+            }
+        head = push(head, date, temp);
         }
-    head = push(head, date, temp);
-    }
     fclose(file);
-    free(date);
     return head;
 }
 
 int weatherBelowZero(list* head) {
     int i = 0;
-    do {
-        if (head->temp < 0) {
-            printf("%s\n", head->date);
-            i++;
-        }
-        head = head->ptr;
-    } while (head != NULL && head->temp < 0);
+        do {
+            if (head->temp < 0) {
+                printf("%s\n", head->date);
+                i++;
+            }
+            head = head->ptr;
+        } while (head != NULL && head->temp < 0);
     return i;
 }
 
@@ -147,10 +132,11 @@ int averageTemperatureSearch(list* head, int temp) {
 
 void deleteList(list* head) {
     list* p = NULL;
-    while (head) {
-        p = head;
-        head = head->ptr;
-        free(p);
-    }
+        while (head) {
+            p = head;
+            head = head->ptr;
+            free(p);
+        }
     free(head);
 }
+
