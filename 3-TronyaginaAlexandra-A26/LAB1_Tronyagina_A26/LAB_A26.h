@@ -1,12 +1,13 @@
 #pragma once
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-#pragma warning (disable:4996)
-#include <stdio.h>
+   #pragma warning (disable:4996)
+  #include <stdio.h>
 #include <stdlib.h>
 
-#define N 12
+    #define N 12
 
     typedef struct list {
         char date[N];
