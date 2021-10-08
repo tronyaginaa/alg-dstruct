@@ -16,6 +16,7 @@ TEST(dateComparison, comparisonTheSameDates) {
 
 	EXPECT_EQ(0, dateComparison(date_1, date_2));
 }
+
 TEST(dateComparison, comparisonDatesWDifferentYears) {
 	char date_1[] = "2002-6-1";
 	char date_2[] = "2020-11-16";
@@ -29,8 +30,6 @@ TEST(dateComparison, comparisonDatesWSameYears) {
 
 	EXPECT_EQ(0, dateComparison(date_1, date_2));
 }
-
-
 
 TEST(listInitialization, addFirstElement) {
 	list* head = NULL;
@@ -99,7 +98,6 @@ TEST(push, sortByDate) {
 	free(head->ptr);
 	free(head);
 }
-
 
 TEST(weatherBelowZero, findElementsWWeatherBelowZero) {
 	list list_1, list_2, list_3;
