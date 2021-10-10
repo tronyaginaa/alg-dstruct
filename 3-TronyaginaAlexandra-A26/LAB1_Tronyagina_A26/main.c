@@ -49,7 +49,7 @@ int dateComparison(char* first, char* second) {
    sscanf(first, "%i-%i-%i", &firstDate[0], &firstDate[1], &firstDate[2]);
    sscanf(second, "%i-%i-%i", &secondDate[0], &secondDate[1], &secondDate[2]);
    for (i = 0; i < 3; i++) {
-      if (firstDate[i] < secondDate[i]){
+      if (firstDate[i] < secondDate[i]) {
          return 1;
       }
       else if (firstDate[i] > secondDate[i]) {
@@ -66,7 +66,6 @@ list* push(list* head, char* date, int temp) {
    list* tmp = (list*)malloc(sizeof(list));
    if (tmp == NULL) {
       printf("Memory initalization error");
-      deleteList(head);
       return NULL;
    }
    strcpy(tmp->date, date);
@@ -104,16 +103,22 @@ list* readFile(char const* fileName) {
    int temp;
    int k;
    list* head = NULL;
+   list* tmp = NULL;
    while (k = fscanf(file, "%s %i", date, &temp) != EOF) {
       if (k < 1) {
-         printf("fscanf error");
+         printf("fscanf error\n");
+         deleteList(head);
+         fclose(file);
          return NULL;
       }  
-      head = push(head, date, temp);
-      if (head == NULL) {
+      tmp = push(head, date, temp);
+      if (tmp == NULL) {
          printf("List filling error\n");
+         deleteList(head);
+         fclose(file);
          return NULL;
       }
+      head = tmp;
    }
    fclose(file);
    return head;
@@ -140,6 +145,6 @@ int averageTemperatureSearch(list* head, int temp) {
       }
       head = head->ptr;
    } while (head != NULL && head->temp <= temp);
-    return i;
+   return i;
 }
 
