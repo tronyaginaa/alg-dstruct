@@ -7,7 +7,7 @@ TEST(dateComparison, comparisonEarlyWLaterDate) {
 	char date_1[] = "2020-11-3";
 	char date_2[] = "2020-11-16";
 
-	EXPECT_EQ(1, dateComparison(date_1,date_2));
+	EXPECT_EQ(1, dateComparison(date_1, date_2));
 }
 
 TEST(dateComparison, comparisonTheSameDates) {
