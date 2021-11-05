@@ -53,10 +53,10 @@ int meminit(void* pMemory, int size) {
 }
 
 void* memalloc(int size) {
-    if (size < 1 || size > memSize - memgetblocksize())
+    if (size < 1 || size > memSize - memgetminimumsize())
         return NULL;
     size += memgetblocksize();
-    void *usedDescriptor = actualDescriptor, *prevDescriptor = NULL;
+    void *usedDescriptor = actualDescriptor, *prevDescriptor = NULL, *newDescriptor = NULL;
     void *allocMemory = NULL;
     while (usedDescriptor) {
         if (*blockSize(usedDescriptor) >= size) {
@@ -74,7 +74,7 @@ void* memalloc(int size) {
     if (!allocMemory) 
         return NULL;
     if (*blockSize(usedDescriptor) > size + memgetblocksize()) {
-        void *newDescriptor = (void*)((char*)usedDescriptor + size);
+        newDescriptor = (void*)((char*)usedDescriptor + size);
         *blockSize(newDescriptor) = *blockSize(usedDescriptor) - size;
         *blockPtr(newDescriptor) = *blockPtr(usedDescriptor);
         *blockSizeInTheEnd(newDescriptor) = *blockSize(newDescriptor);
@@ -90,7 +90,9 @@ void* memalloc(int size) {
         else 
              *blockPtr(prevDescriptor) = *blockPtr(usedDescriptor);
     }
-    if (*blockPtr(usedDescriptor) != NULL)
+    if (newDescriptor)
+        actualDescriptor = newDescriptor;
+    else if (*blockPtr(usedDescriptor) != NULL)
         actualDescriptor = *blockPtr(usedDescriptor);
     else
         actualDescriptor = startDescriptor;
