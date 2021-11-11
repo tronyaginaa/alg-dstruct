@@ -80,17 +80,27 @@ void* memalloc(int size) {
         *blockSizeInTheEnd(newDescriptor) = *blockSize(newDescriptor);
         if (usedDescriptor == startDescriptor)
             startDescriptor = newDescriptor;
-        else
-            *blockPtr(prevDescriptor) = newDescriptor;
-        if (usedDescriptor == actualDescriptor)
-            actualDescriptor = newDescriptor;
+        else {
+            if (prevDescriptor == NULL) {
+                prevDescriptor = startDescriptor;
+                while (*blockPtr(prevDescriptor) != usedDescriptor)
+                    prevDescriptor = *blockPtr(prevDescriptor);
+            }
+                *blockPtr(prevDescriptor) = newDescriptor;
+        }
         *blockSize(usedDescriptor) = size;
     }
     else {
-        if (prevDescriptor == NULL)
+        if (usedDescriptor == startDescriptor)
             startDescriptor = *blockPtr(usedDescriptor);
-        else 
-             *blockPtr(prevDescriptor) = *blockPtr(usedDescriptor);
+        else {
+            if (prevDescriptor == NULL) {
+                prevDescriptor = startDescriptor;
+                while (*blockPtr(prevDescriptor) != usedDescriptor)
+                    prevDescriptor = *blockPtr(prevDescriptor);
+            }
+                *blockPtr(prevDescriptor) = *blockPtr(usedDescriptor);
+        }
     }
     if (newDescriptor)
         actualDescriptor = newDescriptor;
@@ -143,6 +153,8 @@ void memfree(void* p) {
         if (actualDescriptor == nextDescriptor)
             actualDescriptor = usedDescriptor;
         nextMerge = 1;
+        if (actualDescriptor == nextDescriptor)
+            actualDescriptor = usedDescriptor;
     }
     if (prevMerge == 0 && nextMerge == 0) {
         *blockPtr(usedDescriptor) = startDescriptor;
