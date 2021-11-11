@@ -87,6 +87,7 @@ void* memalloc(int size) {
                     prevDescriptor = *blockPtr(prevDescriptor);
             }
                 *blockPtr(prevDescriptor) = newDescriptor;
+            *blockPtr(prevDescriptor) = newDescriptor;
         }
         *blockSize(usedDescriptor) = size;
     }
@@ -99,7 +100,7 @@ void* memalloc(int size) {
                 while (*blockPtr(prevDescriptor) != usedDescriptor)
                     prevDescriptor = *blockPtr(prevDescriptor);
             }
-                *blockPtr(prevDescriptor) = *blockPtr(usedDescriptor);
+            *blockPtr(prevDescriptor) = *blockPtr(usedDescriptor);
         }
     }
     if (newDescriptor)
