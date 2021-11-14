@@ -5,24 +5,14 @@
 //  Created by Alexandra Tronyagina on 12.11.2021.
 //
 
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
-#define TRUE 1
-#define FALSE (!TRUE)
-
-typedef struct node_t{
-    int value;
-    struct node_t* nextNode;
-} node_t;
-
-typedef struct myStack_t{
-    node_t* head;
-} myStack_t;
+#include "3-TronyaginaAlexandra-C2/LabCHeader.h"
 
 int* checkedVertices;
 int** graph;
-int numOfVertices = 0;
-myStack_t* stack;
+int numOfVertices;
 
 void feelGraph(){
     if (!graph)
@@ -46,85 +36,42 @@ void memoryInit(){
     checkedVertices = (int*)malloc(numOfVertices * sizeof(int));
     if (!checkedVertices)
         exit(1);
-    stack = (myStack_t*)malloc(sizeof(myStack_t));
-    stack->head = NULL;
-    if (!stack) {
-        free(checkedVertices);
-        exit(1);
-    }
     graph = (int**)malloc(numOfVertices * sizeof(int*));
     feelGraph();
     if (!graph) {
         free(checkedVertices);
-        free(stack);
         exit(1);
     }
 }
 
 void memoryFree(void){
-    while (stack->head) {
-        node_t* node = (stack)->head;
-        (stack)->head = node->nextNode;
-        free(node);
-    }
-    free(stack);
     free(checkedVertices);
-    for (int i = 0; i < numOfVertices; i++) {
+    for (int i = 0; i < numOfVertices; i++) 
         free(graph[i]);
-    }
     free(graph);
 }
 
-void push(myStack_t** stack, int value){
-    node_t* tmp = (node_t*)malloc(sizeof(node_t));
-    if (!tmp) {
-        memoryFree();
-        exit(1);
-    }
-    tmp->value = value;
-    tmp->nextNode = (*stack)->head;
-    (*stack)->head = tmp;
-    return;
-}
-
-int pop(myStack_t** stack){
-    node_t* node;
-    int value;
-    node = (*stack)->head;
-    (*stack)->head = node->nextNode;
-    value = node->value;
-    free(node);
-    return value;
-}
-
- void readGraph(void){
+ void readGraph(){
      int first, second; //Vertices incident to an edge
      fscanf(stdin, "%i", &numOfVertices);
      memoryInit();
-     while (fscanf(stdin, "%i %i", &first, &second) != EOF) {
+     while (fscanf(stdin, "%i %i", &first, &second) != EOF) 
          graph[first][second] = graph[second][first] = TRUE;
-     }
      return;
  }
 
-void DFS(int num){
+void DFS(int num, int** graph, int* checkedVertices, int numOfVertices){
     fprintf(stdout, "%i ", num);
     checkedVertices[num] = TRUE;
-    for (int i = numOfVertices - 1; i > -1; i--) {
+    for (int i = 0; i < numOfVertices; i++) 
         if (graph[num][i] && !checkedVertices[i])
-            push(&stack, i);
-    }
-    while (stack->head) {
-        num = pop(&stack);
-        if (!checkedVertices[num])
-            DFS(num);
-    }
+            DFS(i, graph, checkedVertices, numOfVertices);
     return;
 }
 
-int main(void) {
+/*int main(void) {
     readGraph();
-    DFS(0);
+    DFS(0, graph, checkedVertices, numOfVertices);
     memoryFree();
     return 0;
-}
+}*/
