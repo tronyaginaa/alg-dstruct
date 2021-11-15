@@ -30,6 +30,7 @@ void feelGraph(){
             graph[i][j] = FALSE;
         }
     }
+    return;
 }
 
 void memoryInit(){
@@ -42,6 +43,7 @@ void memoryInit(){
         free(checkedVertices);
         exit(1);
     }
+    return;
 }
 
 void memoryFree(void){
@@ -49,6 +51,7 @@ void memoryFree(void){
     for (int i = 0; i < numOfVertices; i++) 
         free(graph[i]);
     free(graph);
+    return;
 }
 
  void readGraph(){
@@ -69,9 +72,9 @@ void DFS(int num, int** graph, int* checkedVertices, int numOfVertices){
     return;
 }
 
-/*int main(void) {
+int main(void) {
     readGraph();
     DFS(0, graph, checkedVertices, numOfVertices);
     memoryFree();
     return 0;
-}*/
+}
