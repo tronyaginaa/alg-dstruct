@@ -52,7 +52,10 @@ TEST(DFS_test, StressTest){
     int* checkedVertices = (int*)malloc(numOfVertices * sizeof(int));
     ASSERT_TRUE(checkedVertices);
     int** graph = (int**)malloc(numOfVertices * sizeof(int*));
-    ASSERT_TRUE(graph);
+    if(!graph){
+        ASSERT_TRUE(graph);
+        free(checkedVertices);
+    }
     for (int i = 0; i < numOfVertices; i++) {
         graph[i] = (int*)malloc(numOfVertices * sizeof(int));
         if (!graph[i]) { 
