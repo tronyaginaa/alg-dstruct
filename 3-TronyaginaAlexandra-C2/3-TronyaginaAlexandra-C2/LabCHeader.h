@@ -11,11 +11,24 @@ extern "C" {
 	#define TRUE 1
 	#define FALSE (!TRUE)
 
-	void feelGraph();
+    typedef struct node_t{
+        int value;
+        struct node_t* nextNode;
+    } node_t;
+
+    typedef struct myStack_t{
+        node_t* head;
+    } myStack_t;
+
+// stack functions
+    int pop(myStack_t** stack)
+    void push(myStack_t** stack, int value)
+
+	void filllGraph();
 	void memoryInit();
 	void memoryFree();
 	void readGraph();
-	void DFS(int num, int** graph, int* chekedVertices, int numOfVertices);
+	void DFS(int num, int** graph, int* chekedVertices, int numOfVertices, myStack_t* stack);
 	
 
 #ifdef __cplusplus
