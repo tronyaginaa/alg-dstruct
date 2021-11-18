@@ -21,10 +21,10 @@ extern "C" {
     } myStack_t;
 
 // stack functions
-    int pop(myStack_t** stack)
-    void push(myStack_t** stack, int value)
+	int pop(myStack_t** stack);
+	void push(myStack_t** stack, int value);
 
-	void filllGraph();
+	void fillGraph();
 	void memoryInit();
 	void memoryFree();
 	void readGraph();
