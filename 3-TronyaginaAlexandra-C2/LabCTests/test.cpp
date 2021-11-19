@@ -9,13 +9,13 @@
     RAM: 16 GB 
  
     RESULTS:
-    GRAPH TRAVERSAL TIME: 32.692 sec
-    USED MEMORY: 1.7 GB
+    GRAPH TRAVERSAL TIME: 30421 ms
+    USED MEMORY: 2.1 GB
 */
 
 #define TEST_NUM_OF_VERTICES 25000
 
-TEST(DFS_test, FeelingFileForStressTest){
+TEST(DFS_test, FillingFileForStressTest){
     srand(time(NULL));
     int** graphToFeelFile = (int**)malloc(TEST_NUM_OF_VERTICES * sizeof(int*));
     ASSERT_TRUE(graphToFeelFile);
@@ -25,14 +25,20 @@ TEST(DFS_test, FeelingFileForStressTest){
             for (int j = 0; j < i; j++)
                 free(graphToFeelFile[j]);
             free(graphToFeelFile);
-            ASSERT_TRUE(graphToFeelFile);
+            ASSERT_TRUE(!graphToFeelFile);
         }
     }
     for (int i = 0; i < TEST_NUM_OF_VERTICES; i++) 
         for (int j = i + 1; j < TEST_NUM_OF_VERTICES; j++)
             graphToFeelFile[i][j] = graphToFeelFile[j][i] = rand() % 2;
     FILE* f = fopen("graph_test.txt", "w");
-    ASSERT_TRUE(f);
+    if (f == NULL) {
+        for (int i = 0; i < TEST_NUM_OF_VERTICES; i++)
+            for (int j = 0; j < TEST_NUM_OF_VERTICES; j++)
+                free(graphToFeelFile[j]);
+        free(graphToFeelFile);
+        ASSERT_TRUE(f);
+    }
     fprintf(f, "%i\n", TEST_NUM_OF_VERTICES);
     for (int i = 0; i < TEST_NUM_OF_VERTICES; i++)
         for (int j = i + 1; j < TEST_NUM_OF_VERTICES; j++)
@@ -50,11 +56,23 @@ TEST(DFS_test, StressTest){
     ASSERT_TRUE(f);
     fscanf(f, "%i", &numOfVertices);
     int* checkedVertices = (int*)malloc(numOfVertices * sizeof(int));
-    ASSERT_TRUE(checkedVertices);
-    int** graph = (int**)malloc(numOfVertices * sizeof(int*));
-    if(!graph){
-        ASSERT_TRUE(graph);
+    if (!checkedVertices) {
+        fclose(f);
+        ASSERT_TRUE(checkedVertices);
+    }
+    myStack* stack = (myStack*)malloc(myStack);
+    if (!stack) {
         free(checkedVertices);
+        fclose(f);
+        ASSERT_TRUE(stack);
+    }
+    stack->head = NULL;
+    int** graph = (int**)malloc(numOfVertices * sizeof(int*));
+    if(!graph) {
+        free(checkedVertices);
+        free(stack);
+        fclose(f);
+        ASSERT_TRUE(graph);
     }
     for (int i = 0; i < numOfVertices; i++) {
         graph[i] = (int*)malloc(numOfVertices * sizeof(int));
@@ -63,23 +81,20 @@ TEST(DFS_test, StressTest){
                 free(graph[j]);
             free(graph);
             free(checkedVertices);
-            ASSERT_TRUE(graph);
+            free(stack);
+            fclose(f);
+            ASSERT_TRUE(!graph);
             }
-        for (int j = 0; j < numOfVertices; j++) {
+        checkedVertices[i] = FALSE;
+        for (int j = 0; j < numOfVertices; j++)
             graph[i][j] = FALSE;
-            checkedVertices[j] = FALSE;
-        }
     }
     while (fscanf(f, "%i %i", &first, &second) != EOF) 
         graph[first][second] = graph[second][first] = TRUE;
-    unsigned long start = clock();
-    DFS(0, graph, checkedVertices, numOfVertices);
-    unsigned long end = clock();
-    double dfsTime = (double)(end - start) / CLOCKS_PER_SEC;
-    printf("\n%lf\n", dfsTime);
+    DFS(0, graph, checkedVertices, numOfVertices, stack);
+    fclose(f);
     free(checkedVertices);
-    for (int i = 0; i < numOfVertices; i++) {
+    for (int i = 0; i < numOfVertices; i++)
         free(graph[i]);
-    }
     free(graph);
 }
