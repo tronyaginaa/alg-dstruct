@@ -22,11 +22,11 @@ extern "C" {
 
 // stack functions
 	int pop(myStack_t** stack);
-	void push(myStack_t** stack, int value);
+	myStack_t* push(myStack_t* stack, int value);
 
 	void fillGraph();
 	void memoryInit();
-	void memoryFree();
+	void memoryFree(myStack* stack, int* checkedVertices, int** graph);
 	void readGraph();
 	void DFS(int num, int** graph, int* chekedVertices, int numOfVertices, myStack_t* stack);
 	
