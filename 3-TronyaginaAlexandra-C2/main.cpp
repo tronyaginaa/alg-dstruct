@@ -15,14 +15,16 @@ int** graph;
 int numOfVertices;
 myStack_t* stack;
 
-void push(myStack_t** stack, int value) {
+myStack_t* push(myStack_t* stack, int value) {
     node_t* tmp = (node_t*)malloc(sizeof(node_t));
-    if (!tmp)
-        exit(1);
+    if (!tmp){
+        stackDestroy(stack);
+        return NULL;
+    }
     tmp->value = value;
-    tmp->nextNode = (*stack)->head;
-    (*stack)->head = tmp;
-    return;
+    tmp->nextNode = stack->head;
+    stack->head = tmp;
+    return stack;
 }
 
 int pop(myStack_t** stack) {
@@ -33,6 +35,16 @@ int pop(myStack_t** stack) {
     value = node->value;
     free(node);
     return value;
+}
+
+void stackDestroy(myStack_t* stack){
+    node_t* node = stack->head;
+    while(stack->head) {
+    (*stack)->head = node->nextNode;
+    free(node);
+    }
+    free(stack);
+    return;
 }
 
 void fillGraph() {
@@ -73,8 +85,8 @@ void memoryInit() {
     return;
 }
 
-void memoryFree(void) {
-    free(stack);
+void memoryFree(myStack_t* stack, int* checkedVertices, int** graph) {
+    stackDestroy(stack);
     free(checkedVertices);
     for (int i = 0; i < numOfVertices; i++)
         free(graph[i]);
@@ -92,16 +104,28 @@ void readGraph() {
 }
 
 void DFS(int num, int** graph, int* checkedVertices, int numOfVertices, myStack_t* stack) {
-    push(&stack, num);
-    while (stack->head) {
-        num = pop(&stack);
-        if (!checkedVertices[num]) {
-            fprintf(stdout, "%i ", num);
-            checkedVertices[num] = TRUE;
-            for (int i = numOfVertices; i >= 0; i--)
-                if (graph[num][i] && !checkedVertices[i])
-                    push(&stack, i);
-        }
+    stack = push(stack, num);
+    if (!stack) {
+        memoryFree(stack, checkedVertices, graph);
+        return;
+    }
+    fprintf(stdout ,"%i ", num);
+    while(stack->head){
+        num = stack->head->value;
+        checkedVertices[num] = TRUE;
+        for (int i = 0; i <numOfVertices; i++)
+                if (graph[num][i] && !checkedVertices[i]) {
+                    checkedVertices[i] = TRUE;
+                    fprintf(stdout ,"%i ", i);
+                    stack = push(stack, i);
+                    if (!stack) {
+                        memoryFree(stack, checkedVertices, graph);
+                        return;
+                    }
+                    num = i;
+                    i = 0;
+                }
+        pop(&stack);
     }
     return;
 }
@@ -109,6 +133,6 @@ void DFS(int num, int** graph, int* checkedVertices, int numOfVertices, myStack_
 int main(void) {
     readGraph();
     DFS(0, graph, checkedVertices, numOfVertices, stack);
-    memoryFree();
+    memoryFree(stack, checkedVertices, graph);
     return 0;
 }
