@@ -33,8 +33,8 @@ int pop(myStack_t* stack) {
 
 void stackDestroy(myStack_t* stack) {
 	node_t* node = stack->head;
-	while (stack->head) {
-		stack->head = node->nextNode;
+	while (node) {
+		node = node->nextNode;
 		free(node);
 	}
 	free(stack);
@@ -71,11 +71,13 @@ void readGraph(FILE* stream, int** graph) {
 
 void DFS(int num, int** graph, int numOfVertices) {
 	myStack_t* stack = (myStack_t*)malloc(sizeof(myStack_t));
+	if (!stack)
+		return;
 	stack->head = NULL;
 	int* checkedVertices = (int*)malloc(numOfVertices * sizeof(int));
 	if (!checkedVertices) {
 		free(stack);
-		exit(1);
+		return;
 	}
 	for (int i = 0; i < numOfVertices; i++)
 		checkedVertices[i] = FALSE;
