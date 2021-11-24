@@ -33,9 +33,9 @@ int pop(myStack_t* stack) {
 
 void stackDestroy(myStack_t* stack) {
 	node_t* node = stack->head;
-    node_t* nodeForFree;
+	node_t* nodeForFree;
 	while (node) {
-        nodeForFree = node;
+		nodeForFree = node;
 		node = node->nextNode;
 		free(nodeForFree);
 	}
