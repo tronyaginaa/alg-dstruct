@@ -13,7 +13,7 @@
 	USED MEMORY:  471 MB
 */
 
-TEST(FunctionalTest, notSolutionSudoku) {
+TEST(FunctionalTest, SudokuWithoutSolution) {
 	sudoku_t* sudoku = (sudoku_t*)malloc(sizeof(sudoku_t));
 	ASSERT_TRUE(sudoku);
 	FILE* file = fopen("NotSolutionTest.txt", "r");
@@ -43,7 +43,7 @@ TEST(FunctionalTest, notSolutionSudoku) {
 }
 
 //Test fo sudoku 4x4
-TEST(FunctionalTest, SolutionSudoku) {
+TEST(FunctionalTest, SudokuWithSomeSolution_Test1) {
 	sudoku_t* sudoku = (sudoku_t*)malloc(sizeof(sudoku_t));
 	ASSERT_TRUE(sudoku);
 	FILE* file = fopen("SolutionTest.txt", "r");
@@ -73,7 +73,7 @@ TEST(FunctionalTest, SolutionSudoku) {
 }
 
 //Test for sudoku 9x9
-TEST(FunctionalTest, SolutionSudokuAnotherSize) {
+TEST(FunctionalTest, SudokuWithSomeSolution_Test2) {
 	sudoku_t* sudoku = (sudoku_t*)malloc(sizeof(sudoku_t));
 	ASSERT_TRUE(sudoku);
 	FILE* file = fopen("SolutionTest.txt", "r");
