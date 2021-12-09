@@ -1,0 +1,10 @@
+Debug
+Release
+x64
+.vs
+**.xml
+packages/
+*.config
+*.user 
+*.vcxproj*
+*.sln
