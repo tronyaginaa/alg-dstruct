@@ -40,6 +40,10 @@ TEST(FunctionalTest, SudokuWithoutSolution) {
 	sudoku->solved = FALSE;
 	sudokuSolution(sudoku, 1, 0, 0);
 	ASSERT_TRUE(!sudoku->solved);
+	for (int i = 0; i < sudoku->n; i++)
+		free(sudoku->cells[i]);
+	free(sudoku->cells);
+	free(sudoku);
 }
 
 //Test fo sudoku 4x4
@@ -70,6 +74,10 @@ TEST(FunctionalTest, SudokuWithSomeSolution_Test1) {
 	sudoku->solved = FALSE;
 	sudokuSolution(sudoku, 1, 0, 0);
 	ASSERT_TRUE(sudoku->solved);
+	for (int i = 0; i < sudoku->n; i++)
+		free(sudoku->cells[i]);
+	free(sudoku->cells);
+	free(sudoku);
 }
 
 //Test for sudoku 9x9
@@ -100,6 +108,10 @@ TEST(FunctionalTest, SudokuWithSomeSolution_Test2) {
 	sudoku->solved = FALSE;
 	sudokuSolution(sudoku, 1, 0, 0);
 	ASSERT_TRUE(sudoku->solved);
+	for (int i = 0; i < sudoku->n; i++)
+		free(sudoku->cells[i]);
+	free(sudoku->cells);
+	free(sudoku);
 }
 
 TEST(StreeTest, SudokuStressTest) {
@@ -128,5 +140,9 @@ TEST(StreeTest, SudokuStressTest) {
 	fclose(file);
 	sudoku->solved = FALSE;
 	sudokuSolution(sudoku, 1, 0, 0);
+	for (int i = 0; i < sudoku->n; i++)
+		free(sudoku->cells[i]);
+	free(sudoku->cells);
+	free(sudoku);
 }
 
