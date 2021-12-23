@@ -5,12 +5,9 @@
 #define FALSE (!TRUE)
 
 
-sudoku_t* readFile(const char* fileName) {
+sudoku_t* readFile(FILE* file) {
 	sudoku_t* sudoku = (sudoku_t*)malloc(sizeof(sudoku_t));
 	if (!sudoku)
-		return NULL;
-	FILE* file = fopen(fileName, "r");
-	if (!file)
 		return NULL;
 	fscanf(file, "%i", &sudoku->n);
 	sudoku->n *= sudoku->n;
@@ -23,7 +20,7 @@ sudoku_t* readFile(const char* fileName) {
 		sudoku->cells[i] = (int*)malloc(sudoku->n * sizeof(int));
 		if (!sudoku->cells[i]) {
 			for (int j = 0; j < sudoku->n; j++)
-				free(sudoku->cells[i]);
+				free(sudoku->cells[j]);
 			free(sudoku->cells);
 			fclose(file);
 			return NULL;
@@ -38,8 +35,7 @@ sudoku_t* readFile(const char* fileName) {
 }
 
 
-void printFile(const char* fileName, sudoku_t* sudoku) {
-	FILE* file = fopen(fileName, "w");
+void printFile(FILE* file, sudoku_t* sudoku) {
 	if (!sudoku->solved)
 		fprintf(file, "%i", 0);
 	else
@@ -102,4 +98,12 @@ void freeSudoku(sudoku_t* sudoku) {
 		free(sudoku->cells[i]);
 	free(sudoku->cells);
 	free(sudoku);
+}
+
+void sol(FILE* input, FILE* output){
+    sudoku_t sudoku = readFile;
+    sudokuSolution(sudoku, 1, 0, 0);
+    printFile(output, sudoku);
+    freeSudoku(sudoku);
+    return;
 }
