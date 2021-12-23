@@ -100,7 +100,7 @@ void freeSudoku(sudoku_t* sudoku) {
 	free(sudoku);
 }
 
-void sol(FILE* input, FILE* output){
+void sol(FILE* input, FILE* output) {
     sudoku_t sudoku = readFile;
     sudokuSolution(sudoku, 1, 0, 0);
     printFile(output, sudoku);
