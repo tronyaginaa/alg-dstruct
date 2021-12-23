@@ -101,19 +101,19 @@ void freeSudoku(sudoku_t* sudoku) {
 }
 
 void sol(char const* inputFileName, char const* outputFileName) {
-    FILE* input = fopen(inputFileName, "r");
-    if(!input)
-        return;
-    FILE* input = fopen(outputFileName, "r");
-    if(!output){
-        fclose(input);
-        return;
-    }
-    sudoku_t sudoku = readFile(input);
-    sudokuSolution(sudoku, 1, 0, 0);
-    printFile(output, sudoku);
-    freeSudoku(sudoku);
-    fclose(input);
-    fclose(output);
-    return;
+	FILE* input = fopen(inputFileName, "r");
+	if (!input)
+		return;
+	FILE* output = fopen(outputFileName, "w");
+	if (!output) {
+		fclose(input);
+		return;
+	}
+	sudoku_t sudoku = readFile(input);
+	sudokuSolution(sudoku, 1, 0, 0);
+	printFile(output, sudoku);
+	freeSudoku(sudoku);
+	fclose(input);
+	fclose(output);
+	return;
 }
