@@ -9,140 +9,62 @@
 	RAM: 16 GB
 
 	RESULTS:
-	GRAPH TRAVERSAL TIME: 123061 ms
+	GRAPH TRAVERSAL TIME: 124502 ms
 	USED MEMORY:  471 MB
 */
 
 TEST(FunctionalTest, SudokuWithoutSolution) {
-	sudoku_t* sudoku = (sudoku_t*)malloc(sizeof(sudoku_t));
-	ASSERT_TRUE(sudoku);
-	FILE* file = fopen("NotSolutionTest.txt", "r");
-	ASSERT_TRUE(file);
-	fscanf(file, "%i", &sudoku->n);
-	sudoku->n *= sudoku->n;
-	sudoku->cells = (int**)malloc(sudoku->n * sizeof(int*));
-	ASSERT_TRUE(sudoku->cells);
-	for (int i = 0; i < sudoku->n; i++) {
-		sudoku->cells[i] = (int*)malloc(sudoku->n * sizeof(int));
-		if (!sudoku->cells[i]) {
-			for (int j = 0; j < sudoku->n; j++)
-				free(sudoku->cells[i]);
-			free(sudoku->cells);
-			free(sudoku);
-			fclose(file);
-			ASSERT_TRUE(sudoku);
-		}
-	}
-	for (int i = 0; i < sudoku->n; i++)
-		for (int j = 0; j < sudoku->n; j++)
-			fscanf(file, "%i", &sudoku->cells[i][j]);
-	fclose(file);
-	sudoku->solved = FALSE;
-	sudokuSolution(sudoku, 1, 0, 0);
-	ASSERT_TRUE(!sudoku->solved);
-	for (int i = 0; i < sudoku->n; i++)
-		free(sudoku->cells[i]);
-	free(sudoku->cells);
-	free(sudoku);
+    sol("input_noSolution.txt","output_noSolution.txt");
+    FILE* result = fopen("output_noSolution.txt", "r");
+    ASSERT_TRUE(result);
+    fseek(result, 0, SEEK_END);
+    int i = ftell(result);
+    EXPECT_EQ(i, 1);
+    fscanf(result, "%i", i);
+    EXPECT_EQ(i, 0);
 }
 
 //Test fo sudoku 4x4
 TEST(FunctionalTest, SudokuWithSomeSolution_Test1) {
-	sudoku_t* sudoku = (sudoku_t*)malloc(sizeof(sudoku_t));
-	ASSERT_TRUE(sudoku);
-	FILE* file = fopen("SolutionTest.txt", "r");
-	ASSERT_TRUE(file);
-	fscanf(file, "%i", &sudoku->n);
-	sudoku->n *= sudoku->n;
-	sudoku->cells = (int**)malloc(sudoku->n * sizeof(int*));
-	ASSERT_TRUE(sudoku->cells);
-	for (int i = 0; i < sudoku->n; i++) {
-		sudoku->cells[i] = (int*)malloc(sudoku->n * sizeof(int));
-		if (!sudoku->cells[i]) {
-			for (int j = 0; j < sudoku->n; j++)
-				free(sudoku->cells[i]);
-			free(sudoku->cells);
-			free(sudoku);
-			fclose(file);
-			ASSERT_TRUE(sudoku);
-		}
-	}
-	for (int i = 0; i < sudoku->n; i++)
-		for (int j = 0; j < sudoku->n; j++)
-			fscanf(file, "%i", &sudoku->cells[i][j]);
-	fclose(file);
-	sudoku->solved = FALSE;
-	sudokuSolution(sudoku, 1, 0, 0);
-	ASSERT_TRUE(sudoku->solved);
-	for (int i = 0; i < sudoku->n; i++)
-		free(sudoku->cells[i]);
-	free(sudoku->cells);
-	free(sudoku);
+    sol("input_sudoku_2.txt","output_sudoku_2.txt");
+    FILE* result = fopen("output_sudoku_2.txt", "r");
+    ASSERT_TRUE(result);
+    FILE* expected = fopen("expected_sudoku_2.txt", "r");
+    ASSERT_TRUE(result);
+    fseek(result, 0 ,SEEK_END);
+    fseek(expected, 0 ,SEEK_END);
+    EXPECT_EQ(ftell(result), ftell(expected));
+    fseek(result, 0 ,SEEK_SET);
+    fseek(expected, 0 ,SEEK_SET);
+    int result_cell, expected_sell;
+    while(fscanf(result, "%i", result_cell) != EOF && fscanf(result, "%i", result_cell) != EOF){
+        EXPECT_EQ(result_cell,expected_cell);
+    }
+    fclose(result);
+    fclose(expected);
 }
 
 //Test for sudoku 9x9
 TEST(FunctionalTest, SudokuWithSomeSolution_Test2) {
-	sudoku_t* sudoku = (sudoku_t*)malloc(sizeof(sudoku_t));
-	ASSERT_TRUE(sudoku);
-	FILE* file = fopen("SolutionTest.txt", "r");
-	ASSERT_TRUE(file);
-	fscanf(file, "%i", &sudoku->n);
-	sudoku->n *= sudoku->n;
-	sudoku->cells = (int**)malloc(sudoku->n * sizeof(int*));
-	ASSERT_TRUE(sudoku->cells);
-	for (int i = 0; i < sudoku->n; i++) {
-		sudoku->cells[i] = (int*)malloc(sudoku->n * sizeof(int));
-		if (!sudoku->cells[i]) {
-			for (int j = 0; j < sudoku->n; j++)
-				free(sudoku->cells[i]);
-			free(sudoku->cells);
-			free(sudoku);
-			fclose(file);
-			ASSERT_TRUE(sudoku);
-		}
-	}
-	for (int i = 0; i < sudoku->n; i++)
-		for (int j = 0; j < sudoku->n; j++)
-			fscanf(file, "%i", &sudoku->cells[i][j]);
-	fclose(file);
-	sudoku->solved = FALSE;
-	sudokuSolution(sudoku, 1, 0, 0);
-	ASSERT_TRUE(sudoku->solved);
-	for (int i = 0; i < sudoku->n; i++)
-		free(sudoku->cells[i]);
-	free(sudoku->cells);
-	free(sudoku);
+    sol("input_sudoku_3.txt","output_sudoku_3.txt");
+    FILE* result = fopen("output_sudoku_3.txt", "r");
+    ASSERT_TRUE(result);
+    FILE* expected = fopen("expected_sudoku_3.txt", "r");
+    ASSERT_TRUE(result);
+    fseek(result, 0 ,SEEK_END);
+    fseek(expected, 0 ,SEEK_END);
+    EXPECT_EQ(ftell(result), ftell(expected));
+    fseek(result, 0 ,SEEK_SET);
+    fseek(expected, 0 ,SEEK_SET);
+    int result_cell, expected_sell;
+    while(fscanf(result, "%i", result_cell) != EOF && fscanf(result, "%i", result_cell) != EOF){
+        EXPECT_EQ(result_cell,expected_cell);
+    }
+    fclose(result);
+    fclose(expected);
 }
 
 TEST(StreeTest, SudokuStressTest) {
-	sudoku_t* sudoku = (sudoku_t*)malloc(sizeof(sudoku_t));
-	ASSERT_TRUE(sudoku);
-	FILE* file = fopen("StressTest.txt", "r");
-	ASSERT_TRUE(file);
-	fscanf(file, "%i", &sudoku->n);
-	sudoku->n *= sudoku->n;
-	sudoku->cells = (int**)malloc(sudoku->n * sizeof(int*));
-	ASSERT_TRUE(sudoku->cells);
-	for (int i = 0; i < sudoku->n; i++) {
-		sudoku->cells[i] = (int*)malloc(sudoku->n * sizeof(int));
-		if (!sudoku->cells[i]) {
-			for (int j = 0; j < sudoku->n; j++)
-				free(sudoku->cells[i]);
-			free(sudoku->cells);
-			free(sudoku);
-			fclose(file);
-			ASSERT_TRUE(sudoku);
-		}
-	}
-	for (int i = 0; i < sudoku->n; i++)
-		for (int j = 0; j < sudoku->n; j++)
-			fscanf(file, "%i", &sudoku->cells[i][j]);
-	fclose(file);
-	sudoku->solved = FALSE;
-	sudokuSolution(sudoku, 1, 0, 0);
-	for (int i = 0; i < sudoku->n; i++)
-		free(sudoku->cells[i]);
-	free(sudoku->cells);
-	free(sudoku);
+    sol("input_stressTest.txt","output_stressTest.txt");
 }
 

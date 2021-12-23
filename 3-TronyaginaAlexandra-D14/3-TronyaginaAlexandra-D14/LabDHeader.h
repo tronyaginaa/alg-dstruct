@@ -24,6 +24,7 @@ extern "C" {
 	int cellCheck(sudoku_t* sudoku, int column, int row, int num);
 	void sudokuSolution(sudoku_t* sudoku, int num, int row, int column);
 	void freeSudoku(sudoku_t* sudoku);
+    void sol(FILE* input, FILE* output);
 
 #ifdef __cplusplus
 }
