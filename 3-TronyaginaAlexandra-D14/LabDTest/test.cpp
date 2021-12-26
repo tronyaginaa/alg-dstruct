@@ -9,8 +9,8 @@
 	RAM: 16 GB
 
 	RESULTS:
-	GRAPH TRAVERSAL TIME: 124502 ms
-	USED MEMORY:  471 MB
+	GRAPH TRAVERSAL TIME: 52502 ms
+	USED MEMORY:  101 MB
 */
 
 TEST(FunctionalTest, SudokuWithoutSolution) {
@@ -20,11 +20,12 @@ TEST(FunctionalTest, SudokuWithoutSolution) {
 	fseek(result, 0, SEEK_END);
 	int i = ftell(result);
 	EXPECT_EQ(i, 1);
-	fscanf(result, "%i", i);
+	fseek(result, 0, SEEK_SET);
+	fscanf(result, "%i", &i);
 	EXPECT_EQ(i, 0);
 }
 
-//Test fo sudoku 4x4
+//Test for sudoku 4x4
 TEST(FunctionalTest, SudokuWithSomeSolution_Test1) {
 	sol("testSudoku_2.txt", "output_sudoku_2.txt");
 	FILE* result = fopen("output_sudoku_2.txt", "r");
@@ -36,10 +37,9 @@ TEST(FunctionalTest, SudokuWithSomeSolution_Test1) {
 	EXPECT_EQ(ftell(result), ftell(expected));
 	fseek(result, 0, SEEK_SET);
 	fseek(expected, 0, SEEK_SET);
-	int result_cell, expected_sell;
-	while (fscanf(result, "%i", result_cell) != EOF && fscanf(result, "%i", result_cell) != EOF) {
+	int result_cell, expected_cell;
+	while (fscanf(result, "%i", &result_cell) != EOF && fscanf(expected, "%i", &expected_cell) != EOF)
 		EXPECT_EQ(result_cell, expected_cell);
-	}
 	fclose(result);
 	fclose(expected);
 }
@@ -56,10 +56,9 @@ TEST(FunctionalTest, SudokuWithSomeSolution_Test2) {
 	EXPECT_EQ(ftell(result), ftell(expected));
 	fseek(result, 0, SEEK_SET);
 	fseek(expected, 0, SEEK_SET);
-	int result_cell, expected_sell;
-	while (fscanf(result, "%i", result_cell) != EOF && fscanf(result, "%i", result_cell) != EOF) {
+	int result_cell, expected_cell;
+	while (fscanf(result, "%i", &result_cell) != EOF && fscanf(expected, "%i", &expected_cell) != EOF)
 		EXPECT_EQ(result_cell, expected_cell);
-	}
 	fclose(result);
 	fclose(expected);
 }
