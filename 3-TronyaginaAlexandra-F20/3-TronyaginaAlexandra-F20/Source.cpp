@@ -5,7 +5,10 @@
 //  Created by Alexandra Tronyagina on 21.12.2021.
 //
 
+#include <stdio.h>
+#include <stdlib.h>
 #include "LabF.h"
+
 
 tree_t* createTree(int key) {
 	tree_t* myTree = (tree_t*)malloc(sizeof(tree_t));
@@ -82,7 +85,7 @@ void printLesser(tree_t* myTree, int key, FILE* file) {
 	if (!myTree)
 		return;
 	printLesser(myTree->left, key, file);
-	if (myTree->key <= key) {
+	if (myTree->key < key) {
 		fprintf(file, "%i ", myTree->key);
 		printLesser(myTree->right, key, file);
 	}
@@ -93,9 +96,9 @@ void printTree(tree_t* myTree) {
 	if (!myTree)
 		return;
 	printf("%i ", myTree->key);
-	if (myTree->left != NULL)
+	if (myTree->left)
 		printTree(myTree->left);
-	if (myTree->right != NULL)
+	if (myTree->right)
 		printTree(myTree->right);
 }
 
@@ -116,6 +119,8 @@ tree_t* readFile(FILE* file) {
 	tree_t* myTree = NULL;
 	fscanf(file, "%i", &key);
 	myTree = createTree(key);
+	if (!myTree)
+		return NULL;
 	while (fscanf(file, "%i", &key) != EOF)
 		if (!addElement(myTree, key))
 			return myTree;
