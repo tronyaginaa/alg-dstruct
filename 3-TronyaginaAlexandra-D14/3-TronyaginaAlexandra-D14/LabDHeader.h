@@ -19,12 +19,12 @@ extern "C" {
 		int solved;
 	}sudoku_t;
 
-	sudoku_t* readFile(const char* fileName);
-	void printFile(const char* fileName, sudoku_t* sudoku);
+	sudoku_t* readFile(FILE* file);
+	void printFile(FILE* fileName, sudoku_t* sudoku);
 	int cellCheck(sudoku_t* sudoku, int column, int row, int num);
 	void sudokuSolution(sudoku_t* sudoku, int num, int row, int column);
 	void freeSudoku(sudoku_t* sudoku);
-	void sol(char const* inputFileName, char const* outputFileName);
+	void sol(const char* inputFileName, const char* outputFileName);
 
 #ifdef __cplusplus
 }
