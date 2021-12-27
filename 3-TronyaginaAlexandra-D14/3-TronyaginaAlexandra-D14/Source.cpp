@@ -19,7 +19,7 @@ sudoku_t* readFile(FILE* file) {
 	for (int i = 0; i < sudoku->n; i++) {
 		sudoku->cells[i] = (int*)malloc(sudoku->n * sizeof(int));
 		if (!sudoku->cells[i]) {
-			for (int j = 0; j < sudoku->n; j++)
+			for (int j = 0; j < i; j++)
 				free(sudoku->cells[j]);
 			free(sudoku->cells);
 			fclose(file);
