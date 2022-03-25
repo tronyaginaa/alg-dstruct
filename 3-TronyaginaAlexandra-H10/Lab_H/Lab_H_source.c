@@ -7,8 +7,8 @@
 #include "Lab_H_header.h"
 
 node_t* createNode(node_t* node, int key){
-    node = (node_t*)malloc(sizeof (node_t));
-    if(!node)
+    node = (node_t*)malloc(sizeof(node_t));
+    if (!node)
         return NULL;
     else {
         node->key = key;
@@ -19,12 +19,13 @@ node_t* createNode(node_t* node, int key){
     }
 }
 
-void destroyTree(node_t* node){
-    if(node){
-        destroyTree(node->left);
-        destroyTree(node->right);
-        free(node);
-    }
+void deleteTree(node_t* node){
+    if (!node)
+        return;
+    deleteTree(node->left);
+    deleteTree(node->right);
+    free(node);
+    return;
 }
 
 void printTree(node_t* myTree){
@@ -70,7 +71,7 @@ node_t* rotateLeft(node_t* node){
     node->right = tmp->left;
     tmp->left = node;
     node->height = maxHeight(node->left, node->right);
-    tmp->height = maxHeight(tmp->left, node);
+    tmp->height = maxHeight(tmp->right, node);
     return tmp;
 }
 
@@ -85,15 +86,15 @@ node_t* doubleRotateLeft(node_t* node){
 }
 
 node_t* balanceTree(node_t* node){
-    node-> height = maxHeight(node->left, node->right);
-    if(balanceFactor(node) == 2){
-        if(balanceFactor(node->right) < 0)
+    node->height = maxHeight(node->left, node->right);
+    if (balanceFactor(node) == 2){
+        if (balanceFactor(node->right) < 0)
             node = doubleRotateRight(node);
         else
             node = rotateLeft(node);
     }
-    if(balanceFactor(node) == -2){
-        if(balanceFactor(node->left) > 0)
+    if (balanceFactor(node) == -2){
+        if (balanceFactor(node->left) > 0)
             node = doubleRotateLeft(node);
         else
             node = rotateRight(node);
@@ -108,7 +109,7 @@ node_t* findMinElement(node_t* node){
 }
 
 node_t* removeMinElement(node_t* node){
-    if(!node->left)
+    if (!node->left)
         return node->right;
     node->left = removeMinElement(node->left);
     node = balanceTree(node);
@@ -116,28 +117,28 @@ node_t* removeMinElement(node_t* node){
 }
 
 node_t* addElement(node_t* node, int key){
-    if(!node)
+    if (!node)
         return createNode(node, key);
-    if(key < node->key)
+    if (key < node->key)
         node->left = addElement(node->left, key);
-    if(key > node->key)
+    if (key > node->key)
         node->right = addElement(node->right, key);
     node = balanceTree(node);
     return node;
 }
 
 node_t* removeElement(node_t* node, int key){
-    if(!node)
-        return 0;
-    if(key < node->key)
-        node->left = removeElement(node->left,key);
-    else if(key > node->key)
-        node->right = removeElement(node->right,key);
+    if (!node)
+        return NULL;
+    if (key < node->key)
+        node->left = removeElement(node->left, key);
+    else if (key > node->key)
+        node->right = removeElement(node->right, key);
     else {
         node_t* q = node->left;
         node_t* r = node->right;
         free(node);
-        if(!r)
+        if (!r)
             return q;
         node_t* min = findMinElement(r);
         min->right = removeMinElement(r);
@@ -150,15 +151,15 @@ node_t* removeElement(node_t* node, int key){
 }
 
 void findElement(node_t* node, int key){
-    if(!node){
+    if (!node){
         fprintf(stdout, "no\n");
         return;
     }
-    if(key == node->key){
+    if (key == node->key){
         fprintf(stdout, "yes\n");
         return;
     }
-    if(key < node->key)
+    if (key < node->key)
         findElement(node->left, key);
     else
         findElement(node->right, key);
