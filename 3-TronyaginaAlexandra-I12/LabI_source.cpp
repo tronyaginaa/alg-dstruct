@@ -7,8 +7,6 @@
 //
 #include "LabI_header.h"
 
-node_t* root;
-
 node_t* createNode(void){
     node_t* newNode = (node_t*)malloc(sizeof(node_t));
     if (!newNode)
@@ -29,6 +27,15 @@ node_t* createNode(void){
     return newNode;
 }
 
+int createTree(tree_t* tree){
+    node_t* root = createNode();
+    if (!root)
+        return FALSE;
+    tree->root = root;
+    root->isLeaf = TRUE;
+    return TRUE;
+}
+
 int findPosition(int key, int* keyArr, int n){
     int pos = 0;
     while (pos < n && key > keyArr[pos])
@@ -36,16 +43,16 @@ int findPosition(int key, int* keyArr, int n){
     return pos;
 }
 
-void splitChild(node_t* node, int ind){
+int splitChild(node_t* node, int ind){
     node_t* newNode = createNode();
     if (!newNode)
-        return;
+        return FALSE;
     node_t* tmp = node->childrens[ind];
     newNode->isLeaf = tmp->isLeaf;
     newNode->num = (PARAMETR - 1);
     for (int i = 0; i < (PARAMETR - 1); i++)
         newNode->keys[i] = tmp->keys[i + PARAMETR];
-    if (tmp->childrens[0])
+    if (!tmp->isLeaf)
         for (int i = 0; i < PARAMETR; i++)
             newNode->childrens[i] = tmp->childrens[i + PARAMETR];
     tmp->num = (PARAMETR - 1);
@@ -56,32 +63,33 @@ void splitChild(node_t* node, int ind){
         node->keys[i + 1] = node->keys[i];
     node->keys[ind] = tmp->keys[(PARAMETR - 1)];
     node->num++;
+    return TRUE;
 }
 
-static void addKey(node_t* node, int key){
+int addKey(node_t* node, int key){
     int len = node->num - 1;
-    if (!node->childrens[0]){
+    if (node->isLeaf){
         while (len >= 0 && key < node->keys[len]){
             node->keys[len + 1] = node->keys[len];
             len--;
         }
         node->keys[len + 1] = key;
         node->num++;
+        return TRUE;
     }
-    else{
-        while (len >= 0 && key < node->keys[len])
-            len--;
-        len++;
-        if (node->childrens[len]->num == (2 * PARAMETR - 1)){
-            splitChild(node, len);
-            if (key > node->keys[len])
-                len++;
-        }
-        addKey(node->childrens[len], key);
+    while (len >= 0 && key < node->keys[len])
+        len--;
+    len++;
+    if (node->childrens[len]->num == (2 * PARAMETR - 1)){
+        if(!splitChild(node, len))
+            return FALSE;
+        if (key > node->keys[len])
+            len++;
     }
+    return addKey(node->childrens[len], key);
 }
 
-status_t removeKey(node_t* node, int key){
+status_t removeKey(tree_t* tree, node_t* node, int key){
     int pos, i, k, n;
     int* keyArr;
     status_t status;
@@ -103,7 +111,7 @@ status_t removeKey(node_t* node, int key){
         }
         int min = PARAMETR - 1;
         node->num--;
-        if (node == root)
+        if (node == tree->root)
             min = 1;
         if (node->num >= min)
             return SUCCESS;
@@ -124,7 +132,7 @@ status_t removeKey(node_t* node, int key){
         keyArr[pos] = tmp1->keys[nkey - 1];
         tmp1->keys[nkey - 1] = key;
     }
-    status = removeKey(p[pos], key);
+    status = removeKey(tree, p[pos], key);
     if (status != NOT_ENOUGH_KEYS)
         return status;
     if (pos > 0 && p[pos - 1]->num > (PARAMETR - 1)){
@@ -177,7 +185,7 @@ status_t removeKey(node_t* node, int key){
         p[i] = p[i + 1];
     }
     int min = PARAMETR - 1;
-    if (node == root)
+    if (node == tree->root)
         min = 1;
     node->num--;
     if (node->num >= min)
@@ -186,23 +194,23 @@ status_t removeKey(node_t* node, int key){
         return NOT_ENOUGH_KEYS;
 }
 
-void removeElement(int key){
+void removeElement(tree_t* tree, int key){
     node_t* oldRoot;
-    status_t status = removeKey(root, key);
+    status_t status = removeKey(tree, tree->root, key);
     if (status == NOT_ENOUGH_KEYS){
-        oldRoot = root;
-        root = root->childrens[0];
+        oldRoot = tree->root;
+        tree->root = tree->root->childrens[0];
         free(oldRoot);
     }
 }
 
-int findElement(int key){
-    node_t* tmp = root;
+int findElement(tree_t* tree, int key){
+    node_t* tmp = tree->root;
     int child = 0;
     while (tmp){
         for (int i = 0; i < tmp->num; i++){
             if (key == tmp->keys[i])
-                return 1;
+                return TRUE;
             if (key < tmp->keys[i]){
                 child = i;
                 break;
@@ -212,32 +220,37 @@ int findElement(int key){
         }
         tmp = tmp->childrens[child];
     }
-    return 0;
+    return FALSE;
 }
 
-void addElement(int key){
-    if (findElement(key))
+void addElement(tree_t* tree, int key){
+    if (findElement(tree, key))
         return;
-    if (!root){
-        root = createNode();
-        if (!root)
+    if (!tree->root){
+        tree->root = createNode();
+        if (!tree->root)
             return;
-        root->keys[0] = key;
-        root->num = 1;
+        tree->root->keys[0] = key;
+        tree->root->num = 1;
     }
-    else if (root->num == (2 * PARAMETR - 1)){
-        node_t* oldRoot = root;
+    else if (tree->root->num == (2 * PARAMETR - 1)){
+        node_t* oldRoot = tree->root;
         node_t* newRoot = createNode();
         if (!newRoot)
             return;
-        root = newRoot;
+        tree->root = newRoot;
         newRoot->isLeaf = FALSE;
         newRoot->childrens[0] = oldRoot;
-        splitChild(newRoot, 0);
+        if(!splitChild(newRoot, 0)){
+            free(newRoot->childrens);
+            free(newRoot->keys);
+            free(newRoot);
+            tree->root = oldRoot;
+        }
         addKey(newRoot, key);
     }
     else
-        addKey(root, key);
+        addKey(tree->root, key);
 }
 
 void deleteTree(node_t* node){
@@ -249,5 +262,3 @@ void deleteTree(node_t* node){
     free(node);
     return;
 }
-
-
