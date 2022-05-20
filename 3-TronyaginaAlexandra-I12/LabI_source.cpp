@@ -262,3 +262,16 @@ void deleteTree(node_t* node){
     free(node);
     return;
 }
+
+void printTree(node_t* tree, int lvl){
+    if (!tree)
+        return;
+    int i;
+    for (i = 0; i <= tree->num - 1; i++){
+        printTree(tree->childrens[i], lvl + 1);
+        for (int j = 0; j <= lvl; j++)
+            printf("   ");
+        printf("%i\n", tree->keys[i]);
+    }
+    printTree(tree->childrens[i], lvl + 1);
+}
