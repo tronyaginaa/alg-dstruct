@@ -27,14 +27,19 @@ typedef struct node{
     int isLeaf;
 } node_t;
 
+typedef struct tree_t {
+     node_t* root;
+ } tree_t;
+
 node_t* createNode(void);
+int createTree(tree_t* tree);
 int findPosition(int key, int* keyArr, int n);
-status_t removek(node_t* node, int key);
-void removeElement(int key);
-void splitChild(node_t* node, int ind);
-static void add(node_t* node, int key);
-int findElement(int key);
-void addElement(int key);
+int splitChild(node_t* node, int ind);
+int addKey(node_t* node, int key);
+status_t removeKey(tree_t* tree, node_t* node, int key);
+void removeElement(tree_t* tree, int key);
+int findElement(tree_t* tree, int key);
+void addElement(tree_t* tree, int key);
 void deleteTree(node_t* node);
 
 #endif /* LabI_source_h */
