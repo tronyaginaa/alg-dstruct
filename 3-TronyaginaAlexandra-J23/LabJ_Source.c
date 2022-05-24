@@ -18,7 +18,7 @@ int createTable(hash_t** table, int tableSize){
 
 int hashFunction1(char* str, int size){
     int res = 0;
-    for (int i = 0; str[i] !='\0'; i++) {
+    for (int i = 0; str[i] != '\0'; i++) {
         res += (int)str[i];
         res %= size;
     }
@@ -28,13 +28,15 @@ int hashFunction1(char* str, int size){
 int hashFunction2(char* str, int size){
     int res = 0;
     for (int i = 0; str[i] != '\0'; i++) {
-        res += (int)str[i] + 2*res;
+        res += (int)str[i] + 2 * res;
         res %= size;
     }
     return res;
 }
 
 int addElement(hash_t* table, char* str, const int tableSize){
+    if (str[0] == '\0' || findElement(table, str, tableSize))
+        return FALSE;
     int x = hashFunction1(str, tableSize);
     int y = hashFunction2(str, tableSize);
     for (int i = 0; i < tableSize; i++) {
@@ -52,6 +54,8 @@ int addElement(hash_t* table, char* str, const int tableSize){
 }
 
 int findElement(hash_t* table, char* str, const int tableSize){
+    if (str[0] == '\0')
+        return FALSE;
     int x = hashFunction1(str, tableSize);
     int y = hashFunction2(str, tableSize);
     for (int i = 0; i < tableSize; i++) {
@@ -65,6 +69,8 @@ int findElement(hash_t* table, char* str, const int tableSize){
 }
 
 int removeElement(hash_t* table, char* str, const int tableSize){
+    if (str[0] == '\0')
+        return FALSE;
     int x = hashFunction1(str, tableSize);
     int y = hashFunction2(str, tableSize);
     for (int i = 0; i < tableSize; i++) {
