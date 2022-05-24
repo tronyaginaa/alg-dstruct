@@ -31,7 +31,7 @@ int hashFunction2(char* str, int size){
         res += (int)str[i] + 2 * res;
         res %= size;
     }
-    return res;
+    return res++;
 }
 
 int addElement(hash_t* table, char* str, const int tableSize){
