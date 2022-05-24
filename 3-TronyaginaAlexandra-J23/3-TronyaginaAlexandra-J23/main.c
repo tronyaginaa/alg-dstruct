@@ -10,7 +10,7 @@
 void labSolution(void){
     char comand;
     char str[STR_SIZE];
-    const int TABLE_SIZE = 100000;
+    const int TABLE_SIZE = 1230013;
     hash_t* table = NULL;
     if (!createTable(&table, TABLE_SIZE))
         return;
@@ -36,7 +36,7 @@ void labSolution(void){
         }
         comand = (char)fgetc(stdin); //get '\n' from stdin
     }
-    free(table);
+    destroyTable(table);
     return;
 }
 
