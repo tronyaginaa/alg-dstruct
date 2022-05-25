@@ -27,7 +27,7 @@ int hashFunction1(char* str, int size){
 
 int hashFunction2(char* str, int size){
     int res = 0;
-    int primeNum = 1230023; //TABLE_SIZE = 1230013
+    int primeNum = 100043; //TABLE_SIZE = 1230013
     for (int i = 0; str[i] != '\0'; i++) {
         res += (int)str[i] + 2 * res;
         res %= primeNum;
